@@ -1,6 +1,8 @@
 PROPOSAL FOR VIRTUAL EXHIBIT
+
 1.Title
 "Clockwork: The Rhythm of the Processor"
+
 2. Group's Member Roster
 Student Name
 Student ID
