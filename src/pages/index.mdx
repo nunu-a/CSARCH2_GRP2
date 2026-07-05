@@ -1,0 +1,29 @@
+---
+layout: ../layouts/ExhibitLayout.astro
+title: "Pipeline Simulator"
+description: "Interactive 5-stage pipeline simulator with clock speed control"
+---
+
+import PipelineSimulator from '../components/PipelineSimulator.jsx';
+
+# 5-Stage Pipeline Simulator
+
+<div style="margin: 2rem 0;">
+  <PipelineSimulator client:load />
+</div>
+
+## About This Simulation
+
+This interactive simulator demonstrates how a 5-stage RISC pipeline (IF, ID, EX, MEM, WB) processes instructions. Use the slider below to control the clock speed and observe:
+
+- **Oscilloscope**: Visual representation of clock cycles
+- **Square Wave**: Frequency visualization matching the clock speed
+- **Instruction Pipeline**: See instructions move through stages in real-time
+- **Gantt Chart**: Track multiple instructions as they flow through the pipeline
+
+### Key Concepts
+
+- **Clock Speed**: Controls how fast instructions are processed
+- **Pipeline Stages**: IF (Instruction Fetch), ID (Instruction Decode), EX (Execute), MEM (Memory Access), WB (Write Back)
+- **Hazards**: Stalls and dependencies that affect performance
+- **Throughput**: Instructions completed per cycle
