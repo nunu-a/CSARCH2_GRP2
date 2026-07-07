@@ -32,4 +32,38 @@ import PipelineSimulator from '../components/PipelineSimulator.jsx';
     <li><strong>Hazards:</strong> Stalls and dependencies that affect performance</li>
     <li><strong>Throughput:</strong> Instructions completed per cycle</li>
   </ul>
+
+<h3 style={{ color: '#e8edf2', fontSize: '1.2rem', marginTop: '2rem', marginBottom: '0.5rem' }}>The CPU Clock (Hardware)</h3>
+  <p style={{ lineHeight: '1.7', marginBottom: '1rem' }}>
+    While the simulator above visualizes the logic of a clock cycle, the actual physical clock in most traditional computers is driven by a <strong>crystal oscillator</strong>. 
+  </p>
+  <ul style={{ listStyleType: 'square', paddingLeft: '1.5rem', lineHeight: '1.7', marginBottom: '2rem' }}>
+    <li><strong>Quartz Crystal:</strong> The physical heart of the timing system. When an electrical voltage is applied to a precisely cut piece of quartz, it mechanically vibrates at a constant, unyielding frequency—a phenomenon known as the piezoelectric effect.</li>
+    <li><strong>Clock Generator:</strong> An oscillator circuit converts these physical vibrations into a continuous stream of alternating high and low electrical voltages (a square wave). In digital logic design, the rising edge of this wave is what triggers the pipeline registers to latch data and transition to the next stage.</li>
+    <li><strong>Clock Speed & Multipliers:</strong> A base quartz crystal typically vibrates in the Megahertz (MHz) range. Modern CPUs use internal phase-locked loops (PLLs) as frequency multipliers to step this base rhythm up to the Gigahertz (GHz) speeds required for high-performance instruction throughput.</li>
+  </ul>
+
+  <h3 style={{ color: '#e8edf2', fontSize: '1.2rem', marginTop: '2rem', marginBottom: '0.5rem' }}>References & Further Reading</h3>
+  <ul style={{ listStyleType: 'square', paddingLeft: '1.5rem', lineHeight: '1.7' }}>
+    <li>
+      <a 
+        href="https://en.wikipedia.org/wiki/Crystal_oscillator" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{ color: '#00ffc8', textDecoration: 'none' }}
+      >
+        Wikipedia: Crystal Oscillator & The Piezoelectric Effect
+      </a>
+    </li>
+    <li>
+      <a 
+        href="https://www.geeksforgeeks.org/computer-organization-architecture/clock-speed/" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        style={{ color: '#00ffc8', textDecoration: 'none' }}
+      >
+        GeeksforGeeks: CPU Clock Speed and Architecture
+      </a>
+    </li>
+  </ul>
 </div>
