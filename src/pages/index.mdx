@@ -6,24 +6,30 @@ description: "Interactive 5-stage pipeline simulator with clock speed control"
 
 import PipelineSimulator from '../components/PipelineSimulator.jsx';
 
-# 5-Stage Pipeline Simulator
-
-<div style="margin: 2rem 0;">
+<div style={{ marginBottom: '3rem' }}>
   <PipelineSimulator client:load />
 </div>
 
-## About This Simulation
+<hr style={{ border: '0', height: '1px', background: '#1a2540', margin: '3rem 0' }} />
 
-This interactive simulator demonstrates how a 5-stage RISC pipeline (IF, ID, EX, MEM, WB) processes instructions. Use the slider below to control the clock speed and observe:
+<div style={{ color: '#8892b0' }}>
+  <h2 style={{ color: '#e8edf2', fontSize: '1.5rem', marginBottom: '1rem' }}>About This Simulation</h2>
 
-- **Oscilloscope**: Visual representation of clock cycles
-- **Square Wave**: Frequency visualization matching the clock speed
-- **Instruction Pipeline**: See instructions move through stages in real-time
-- **Gantt Chart**: Track multiple instructions as they flow through the pipeline
+  This interactive simulator demonstrates how a 5-stage RISC pipeline (IF, ID, EX, MEM, WB) processes instructions. Use the slider above to control the clock speed and observe:
 
-### Key Concepts
+  <ul style={{ listStyleType: 'square', paddingLeft: '1.5rem', margin: '1rem 0', lineHeight: '1.7' }}>
+    <li><strong style={{ color: '#00ffc8' }}>Oscilloscope:</strong> Visual representation of clock cycles</li>
+    <li><strong style={{ color: '#00ffc8' }}>Square Wave:</strong> Frequency visualization matching the clock speed</li>
+    <li><strong style={{ color: '#00ffc8' }}>Instruction Pipeline:</strong> See instructions move through stages in real-time</li>
+    <li><strong style={{ color: '#00ffc8' }}>Gantt Chart:</strong> Track multiple instructions as they flow through the pipeline</li>
+  </ul>
 
-- **Clock Speed**: Controls how fast instructions are processed
-- **Pipeline Stages**: IF (Instruction Fetch), ID (Instruction Decode), EX (Execute), MEM (Memory Access), WB (Write Back)
-- **Hazards**: Stalls and dependencies that affect performance
-- **Throughput**: Instructions completed per cycle
+  <h3 style={{ color: '#e8edf2', fontSize: '1.2rem', marginTop: '2rem', marginBottom: '0.5rem' }}>Key Concepts</h3>
+  
+  <ul style={{ listStyleType: 'square', paddingLeft: '1.5rem', lineHeight: '1.7' }}>
+    <li><strong>Clock Speed:</strong> Controls how fast instructions are processed</li>
+    <li><strong>Pipeline Stages:</strong> IF (Instruction Fetch), ID (Instruction Decode), EX (Execute), MEM (Memory Access), WB (Write Back)</li>
+    <li><strong>Hazards:</strong> Stalls and dependencies that affect performance</li>
+    <li><strong>Throughput:</strong> Instructions completed per cycle</li>
+  </ul>
+</div>

@@ -1,84 +1,92 @@
 import { useState, useEffect, useRef } from 'react';
 
-// ============================================================
-// SHARED STATE — Laborada
-// One slider value drives everything on this page.
-// Do not add more top-level state unless absolutely necessary.
-// ============================================================
-
 const MIN_HZ = 0.5;
 const MAX_HZ = 10;
 
-// Sample instructions — Alonto finalizes this list (max 4)
 const INSTRUCTIONS = ['MOV', 'ADD', 'SHL', 'ROR'];
 const STAGES = ['IF', 'ID', 'EX', 'MEM', 'WB'];
 
 export default function PipelineSimulator() {
-  const [speed, setSpeed] = useState(2); // shared clock speed in GHz
+  const [speed, setSpeed] = useState(2);
 
   return (
-    <div style={{ background: '#0a0e17', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '3rem' }}>
+    <div style={{
+      background: '#0a0e17',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '2.5rem',
+      fontFamily: 'JetBrains Mono, monospace'
+    }}>
 
-      {/* --------------------------------------------------------
-          SECTION 1: CLOCK SPEED SLIDER — [Laborada]
-          Single range input. speed state lives here and is passed
-          down as a prop to every visual below. Do not duplicate
-          speed state anywhere else in this file.
-          -------------------------------------------------------- */}
+      {/* HEADER BANNER - TOP MOST PART */}
+      <div style={{ textAlign: 'center', borderBottom: '1px solid #1a2540', paddingBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.6rem', color: '#00ffc8', fontWeight: 'bold', fontSize: '1.6rem', letterSpacing: '2px' }}>
+          <span style={{ fontSize: '1.8rem', textShadow: '0 0 10px rgba(0,255,200,0.5)' }}>❖</span> CLOCKWORK
+        </div>
+        <div style={{ color: '#8892b0', fontSize: '0.85rem', marginTop: '0.3rem', letterSpacing: '1px' }}>
+          The Rhythm of the Processor
+        </div>
+
+        <h1 style={{ color: '#e8edf2', fontSize: '2.2rem', margin: '1.5rem 0 0.5rem 0', fontWeight: '700', letterSpacing: '1px' }}>
+          TICK, TOCK, EXECUTE
+        </h1>
+        <p style={{ color: '#8892b0', fontSize: '1rem', margin: 0, maxWidth: '500px', marginLeft: 'auto', marginRight: 'auto' }}>
+          Following the Clock through the CPU pipeline
+        </p>
+      </div>
+
+      {/* SECTION 1: CLOCK SPEED SLIDER */}
       <ClockSlider speed={speed} onSpeedChange={setSpeed} />
 
-      {/* --------------------------------------------------------
-          SECTION 2: OSCILLOSCOPE + SQUARE WAVE — Laborada
-          Two canvas visuals side by side, both receiving speed
-          as a prop. Oscilloscope: circle track with light tracing
-          it. Square wave: live waveform matching the frequency.
-          Both use requestAnimationFrame internally.
-          -------------------------------------------------------- */}
+      {/* SECTION 2: OSCILLOSCOPE + SQUARE WAVE */}
       <div style={{ display: 'flex', gap: '2rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         <Oscilloscope speed={speed} />
         <SquareWave speed={speed} />
       </div>
-      
 
-      {/* --------------------------------------------------------
-          SECTION 3: INSTRUCTION DISPLAY — Choa
-          Shows the 3-4 sample instructions as cards/pills.
-          The currently-being-fetched instruction is highlighted.
-          Derives which instruction is active from speed + a shared
-          cycle counter. See pipelineLogic notes below.
-          -------------------------------------------------------- */}
+      {/* SECTION 3: INSTRUCTION DISPLAY */}
       <InstructionDisplay speed={speed} />
 
-      {/* --------------------------------------------------------
-          SECTION 4: GANTT PIPELINE TABLE — Laborada / Choa
-          Animated Gantt chart showing IF ID EX MEM WB stages
-          across clock cycles. Multiple instructions in flight at
-          once (overlapping diagonal pattern). Highlights the cell
-          that is currently active in sync with the clock speed.
-          -------------------------------------------------------- */}
+      {/* SECTION 4: GANTT PIPELINE TABLE */}
       <PipelineGantt speed={speed} />
 
     </div>
   );
 }
 
-
-// ============================================================
-// CLOCK SLIDER — Laborada
-// ============================================================
 function ClockSlider({ speed, onSpeedChange }) {
-  // TODO (Laborada):
-  // - Style the slider to match the oscilloscope dark theme
-  // - Show current speed as a label (e.g. "2.0 GHz")
-  // - Custom thumb: cyan circle with glow (see ClockTrack.jsx for reference CSS)
-  // - Min 0.5 GHz, Max 10 GHz, step 0.1
-
   return (
-    <div>
-      {/* PLACEHOLDER — replace with styled slider */}
-      <label style={{ color: '#8892b0', fontFamily: 'JetBrains Mono' }}>
-        Clock Speed: {speed.toFixed(1)} GHz
-      </label>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#0e1524', padding: '1.5rem', borderRadius: '8px', border: '1px solid #1a2540' }}>
+      <style>{`
+        input[type=range].custom-slider {
+          -webkit-appearance: none;
+          width: 100%;
+          background: #1a2540;
+          height: 6px;
+          border-radius: 3px;
+          outline: none;
+        }
+        input[type=range].custom-slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          border-radius: 50%;
+          background: #00ffc8;
+          cursor: pointer;
+          box-shadow: 0 0 10px #00ffc8, 0 0 20px #00ffc8;
+          transition: transform 0.1s;
+        }
+        input[type=range].custom-slider::-webkit-slider-thumb:hover {
+          transform: scale(1.2);
+        }
+      `}</style>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <span style={{ color: '#8892b0', fontSize: '0.9rem' }}>Clock Frequency Control</span>
+        <span style={{ color: '#00ffc8', fontWeight: 'bold', textShadow: '0 0 8px rgba(0,255,200,0.3)' }}>
+          {speed.toFixed(1)} GHz
+        </span>
+      </div>
       <input
         type="range"
         min={MIN_HZ}
@@ -86,16 +94,12 @@ function ClockSlider({ speed, onSpeedChange }) {
         step={0.1}
         value={speed}
         onChange={e => onSpeedChange(parseFloat(e.target.value))}
-        style={{ width: '100%' }}
+        className="custom-slider"
       />
     </div>
   );
 }
 
-
-// ============================================================
-// OSCILLOSCOPE (CIRCLE TRACK) — Laborada
-// ============================================================
 function Oscilloscope({ speed }) {
   const canvasRef = useRef(null);
   const angleRef = useRef(0);
@@ -111,21 +115,13 @@ function Oscilloscope({ speed }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const DPR = window.devicePixelRatio || 1;
-    const SIZE = 280;
+    const SIZE = 240;
     canvas.width = SIZE * DPR;
     canvas.height = SIZE * DPR;
     canvas.style.width = SIZE + 'px';
     canvas.style.height = SIZE + 'px';
     ctx.scale(DPR, DPR);
-    const CX = SIZE / 2, CY = SIZE / 2, R = 100, DOT_R = 8, TRAIL = 40;
-
-    // TODO (Laborada):
-    // - Draw the ring track
-    // - Draw tick marks around the ring (12 total, 4 major)
-    // - Animate the glowing dot around the ring at speed hz
-    // - Draw a fading cyan trail behind the dot
-    // - Draw speed label at center (GHz value)
-    // See ClockTrack.jsx for full working implementation to copy from
+    const CX = SIZE / 2, CY = SIZE / 2, R = 80, DOT_R = 6, TRAIL = 35;
 
     function draw(ts) {
       if (!lastTimeRef.current) lastTimeRef.current = ts;
@@ -139,36 +135,53 @@ function Oscilloscope({ speed }) {
       if (trailRef.current.length > TRAIL) trailRef.current.shift();
 
       ctx.clearRect(0, 0, SIZE, SIZE);
+      ctx.fillStyle = '#0e1524';
+      ctx.fillRect(0, 0, SIZE, SIZE);
 
-      // PLACEHOLDER ring — Laborada replaces with full styled version
+      for (let i = 0; i < 12; i++) {
+        const angle = (i * Math.PI) / 6;
+        const isMajor = i % 3 === 0;
+        const x1 = CX + (R + (isMajor ? 12 : 6)) * Math.cos(angle);
+        const y1 = CY + (R + (isMajor ? 12 : 6)) * Math.sin(angle);
+        const x2 = CX + (R + 2) * Math.cos(angle);
+        const y2 = CY + (R + 2) * Math.sin(angle);
+
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = isMajor ? '#00ffc8' : '#1a2540';
+        ctx.lineWidth = isMajor ? 2 : 1;
+        ctx.stroke();
+      }
+
       ctx.beginPath();
       ctx.arc(CX, CY, R, 0, Math.PI * 2);
       ctx.strokeStyle = '#1a2540';
-      ctx.lineWidth = 3;
+      ctx.lineWidth = 2;
       ctx.stroke();
 
-      // Trail
       const trail = trailRef.current;
       for (let i = 1; i < trail.length; i++) {
         const t = i / trail.length;
         ctx.beginPath();
         ctx.moveTo(trail[i - 1].x, trail[i - 1].y);
         ctx.lineTo(trail[i].x, trail[i].y);
-        ctx.strokeStyle = `rgba(0,255,200,${t * 0.6})`;
-        ctx.lineWidth = t * 3;
+        ctx.strokeStyle = `rgba(0, 255, 200, ${t * 0.45})`;
+        ctx.lineWidth = t * 4;
         ctx.lineCap = 'round';
         ctx.stroke();
       }
 
-      // Dot
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = '#00ffc8';
       ctx.beginPath();
       ctx.arc(lx, ly, DOT_R, 0, Math.PI * 2);
       ctx.fillStyle = '#00ffc8';
       ctx.fill();
+      ctx.shadowBlur = 0;
 
-      // Center label
       ctx.fillStyle = '#e8edf2';
-      ctx.font = '700 18px JetBrains Mono, monospace';
+      ctx.font = '700 14px "JetBrains Mono", monospace';
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(speedRef.current.toFixed(1) + ' GHz', CX, CY);
@@ -183,13 +196,9 @@ function Oscilloscope({ speed }) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{ display: 'block' }} />;
+  return <canvas ref={canvasRef} style={{ display: 'block', border: '1px solid #1a2540', borderRadius: '8px', flexGrow: 1, maxWidth: '240px' }} />;
 }
 
-
-// ============================================================
-// SQUARE WAVE — Laborada
-// ============================================================
 function SquareWave({ speed }) {
   const canvasRef = useRef(null);
   const animRef = useRef(null);
@@ -204,41 +213,48 @@ function SquareWave({ speed }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     const DPR = window.devicePixelRatio || 1;
-    const W = 280, H = 140;
+    const W = 320, H = 240;
     canvas.width = W * DPR;
     canvas.height = H * DPR;
     canvas.style.width = W + 'px';
     canvas.style.height = H + 'px';
     ctx.scale(DPR, DPR);
 
-    // TODO (Laborada):
-    // - Draw a scrolling square wave across the canvas
-    // - Wave frequency scales with speedRef.current
-    // - Higher speed = more wave cycles visible = faster scroll
-    // - Color: #00ffc8 (cyan), background: #0a0e17
-    // - Add axis line at vertical center
-    // - Wave amplitude should be about 40% of canvas height
-
     function draw(ts) {
       if (!lastTimeRef.current) lastTimeRef.current = ts;
       const dt = (ts - lastTimeRef.current) / 1000;
       lastTimeRef.current = ts;
 
-      offsetRef.current += speedRef.current * 60 * dt;
+      offsetRef.current += speedRef.current * 75 * dt;
 
       ctx.clearRect(0, 0, W, H);
-
-      // PLACEHOLDER — Laborada replaces with styled scrolling square wave
-      ctx.fillStyle = '#0a0e17';
+      ctx.fillStyle = '#0e1524';
       ctx.fillRect(0, 0, W, H);
 
-      const period = W / (speedRef.current * 0.5);
-      const amp = H * 0.3;
+      ctx.strokeStyle = '#111a2e';
+      ctx.lineWidth = 1;
+      for (let g = 20; g < W; g += 20) {
+        ctx.beginPath(); ctx.moveTo(g, 0); ctx.lineTo(g, H); ctx.stroke();
+      }
+      for (let g = 20; g < H; g += 20) {
+        ctx.beginPath(); ctx.moveTo(0, g); ctx.lineTo(W, g); ctx.stroke();
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(0, H / 2);
+      ctx.lineTo(W, H / 2);
+      ctx.strokeStyle = '#1a2540';
+      ctx.stroke();
+
+      const period = W / (speedRef.current * 0.45);
+      const amp = H * 0.25;
       const mid = H / 2;
 
       ctx.beginPath();
       ctx.strokeStyle = '#00ffc8';
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
+      ctx.shadowBlur = 6;
+      ctx.shadowColor = '#00ffc8';
 
       let x = 0;
       while (x < W) {
@@ -250,11 +266,13 @@ function SquareWave({ speed }) {
 
         const nextPhase = (x + 1 + offsetRef.current) % period;
         const nextHigh = nextPhase < period / 2;
-        if (high !== nextHigh) ctx.lineTo(x, nextHigh ? mid - amp : mid + amp);
-
+        if (high !== nextHigh) {
+          ctx.lineTo(x, nextHigh ? mid - amp : mid + amp);
+        }
         x++;
       }
       ctx.stroke();
+      ctx.shadowBlur = 0;
 
       animRef.current = requestAnimationFrame(draw);
     }
@@ -266,22 +284,10 @@ function SquareWave({ speed }) {
     };
   }, []);
 
-  return <canvas ref={canvasRef} style={{ display: 'block', border: '1px solid #1a2540', borderRadius: '8px' }} />;
+  return <canvas ref={canvasRef} style={{ display: 'block', border: '1px solid #1a2540', borderRadius: '8px', flexGrow: 2, maxWidth: '600px' }} />;
 }
 
-
-// ============================================================
-// INSTRUCTION DISPLAY — Choa
-// ============================================================
 function InstructionDisplay({ speed }) {
-  // TODO (Choa):
-  // - Display INSTRUCTIONS array as styled cards/pills in a row
-  // - One instruction is highlighted at a time based on the current
-  //   cycle (use the same cycle logic as PipelineGantt below)
-  // - Highlighted = the instruction currently in the IF stage
-  // - Color: active card uses #00ffc8 accent, inactive uses #1a2540
-  // - Update rate is tied to speed prop (faster speed = faster highlight changes)
-
   const [activeIndex, setActiveIndex] = useState(0);
   const intervalRef = useRef(null);
 
@@ -295,45 +301,40 @@ function InstructionDisplay({ speed }) {
   }, [speed]);
 
   return (
-    <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-      {/* PLACEHOLDER — Choa replaces with styled instruction cards */}
-      {INSTRUCTIONS.map((instr, i) => (
-        <div
-          key={instr}
-          style={{
-            padding: '0.5rem 1.5rem',
-            borderRadius: '8px',
-            border: `1px solid ${i === activeIndex ? '#00ffc8' : '#1a2540'}`,
-            color: i === activeIndex ? '#00ffc8' : '#8892b0',
-            fontFamily: 'JetBrains Mono, monospace',
-            fontSize: '1rem',
-            background: i === activeIndex ? '#0d2b2b' : '#141b2b',
-            transition: 'all 0.1s',
-          }}
-        >
-          {instr}
-        </div>
-      ))}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#0e1524', padding: '1.25rem', borderRadius: '8px', border: '1px solid #1a2540' }}>
+      <div style={{ color: '#8892b0', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Instruction Stream (IF Stage Focus)</div>
+      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+        {INSTRUCTIONS.map((instr, i) => {
+          const isActive = i === activeIndex;
+          return (
+            <div
+              key={instr}
+              style={{
+                padding: '0.75rem 2rem',
+                borderRadius: '6px',
+                border: `1px solid ${isActive ? '#00ffc8' : '#1a2540'}`,
+                color: isActive ? '#00ffc8' : '#8892b0',
+                fontSize: '1.1rem',
+                fontWeight: 'bold',
+                background: isActive ? 'rgba(0, 255, 200, 0.08)' : '#0a0e17',
+                boxShadow: isActive ? '0 0 15px rgba(0,255,200,0.15)' : 'none',
+                transition: 'all 0.15s ease-in-out',
+                flex: 1,
+                minWidth: '80px',
+                textAlign: 'center'
+              }}
+            >
+              {instr}
+              {isActive && <div style={{ fontSize: '0.65rem', color: '#00ffc8', marginTop: '3px', fontWeight: 'normal' }}>FETCHING</div>}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
 
-
-// ============================================================
-// PIPELINE GANTT TABLE — Choa
-// ============================================================
 function PipelineGantt({ speed }) {
-  // TODO (Choa):
-  // - Render a Gantt table: rows = INSTRUCTIONS, columns = clock cycles
-  // - Each cell shows which stage (IF/ID/EX/MEM/WB) that instruction
-  //   is in at that cycle. instruction i is in stage s at cycle (i + s).
-  // - Highlight the column corresponding to the current cycle
-  // - Current cycle advances at the rate of speed (GHz)
-  // - Total cycles = INSTRUCTIONS.length + STAGES.length - 1 (= 8)
-  // - Loop back to cycle 0 after the last cycle
-  // - Color: active column highlight #00ffc8, stage label inside cell
-  // - Header row shows cycle numbers (C1, C2, C3...)
-
   const TOTAL_CYCLES = INSTRUCTIONS.length + STAGES.length - 1;
   const [cycle, setCycle] = useState(0);
   const intervalRef = useRef(null);
@@ -356,47 +357,72 @@ function PipelineGantt({ speed }) {
   }
 
   return (
-    <div style={{ overflowX: 'auto' }}>
-      {/* PLACEHOLDER table — Choa replaces with styled Gantt */}
-      <table style={{ borderCollapse: 'collapse', fontFamily: 'JetBrains Mono, monospace', color: '#e8edf2', fontSize: '0.8rem' }}>
+    <div style={{ background: '#0e1524', padding: '1.25rem', borderRadius: '8px', border: '1px solid #1a2540', overflowX: 'auto' }}>
+      <div style={{ color: '#8892b0', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>5-Stage Execution Gantt Chart</div>
+      <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '4px', color: '#e8edf2', fontSize: '0.85rem' }}>
         <thead>
           <tr>
-            <th style={{ padding: '0.5rem 1rem', color: '#8892b0' }}>Instruction</th>
-            {Array.from({ length: TOTAL_CYCLES }, (_, c) => (
-              <th
-                key={c}
-                style={{
-                  padding: '0.5rem 1rem',
-                  color: c === cycle ? '#00ffc8' : '#8892b0',
-                  borderBottom: c === cycle ? '2px solid #00ffc8' : '2px solid transparent',
-                }}
-              >
-                C{c + 1}
-              </th>
-            ))}
+            <th style={{ padding: '0.75rem', color: '#8892b0', textAlign: 'left', background: '#0a0e17', borderRadius: '4px', width: '120px' }}>Instr</th>
+            {Array.from({ length: TOTAL_CYCLES }, (_, c) => {
+              const isCurrent = c === cycle;
+              return (
+                <th
+                  key={c}
+                  style={{
+                    padding: '0.75rem',
+                    color: isCurrent ? '#00ffc8' : '#8892b0',
+                    background: isCurrent ? 'rgba(0, 255, 200, 0.1)' : '#0a0e17',
+                    border: isCurrent ? '1px solid #00ffc8' : '1px solid #1a2540',
+                    borderRadius: '4px',
+                    textAlign: 'center',
+                    transition: 'all 0.15s'
+                  }}
+                >
+                  C{c + 1}
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
           {INSTRUCTIONS.map((instr, i) => (
             <tr key={instr}>
-              <td style={{ padding: '0.5rem 1rem', color: '#8892b0' }}>{instr}</td>
+              <td style={{ padding: '0.75rem', color: '#e8edf2', background: '#0a0e17', borderRadius: '4px', fontWeight: 'bold' }}>{instr}</td>
               {Array.from({ length: TOTAL_CYCLES }, (_, c) => {
                 const label = getStageLabel(i, c);
-                const isActive = c === cycle && label !== '';
+                const isActiveColumn = c === cycle;
+                const hasData = label !== '';
+                const isExecutingNow = isActiveColumn && hasData;
+
                 return (
                   <td
                     key={c}
                     style={{
-                      padding: '0.5rem 1rem',
+                      padding: '0.75rem',
                       textAlign: 'center',
-                      background: isActive ? '#0d2b2b' : label ? '#141b2b' : 'transparent',
-                      color: isActive ? '#00ffc8' : '#4ecdc4',
-                      border: '1px solid #1a2540',
+                      fontWeight: 'bold',
+                      background: isExecutingNow
+                        ? '#00ffc8'
+                        : hasData
+                          ? '#141b2b'
+                          : 'rgba(10,14,23,0.4)',
+                      color: isExecutingNow
+                        ? '#0a0e17'
+                        : hasData
+                          ? '#4ecdc4'
+                          : 'transparent',
+                      border: isExecutingNow
+                        ? '1px solid #00ffc8'
+                        : hasData
+                          ? '1px solid #1a2540'
+                          : '1px solid rgba(26,37,64,0.3)',
                       borderRadius: '4px',
-                      minWidth: '48px',
+                      minWidth: '55px',
+                      boxShadow: isExecutingNow ? '0 0 12px rgba(0,255,200,0.4)' : 'none',
+                      transition: 'all 0.12s'
                     }}
                   >
-                    {label}
+                    {label || '.'}
                   </td>
                 );
               })}

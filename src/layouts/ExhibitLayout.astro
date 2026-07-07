@@ -9,18 +9,18 @@ const { title, description } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #0a0e17;">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
-    {description && <meta name="description" content={description} />}
+    {description && <meta name=\"description\" content={description} />}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
   </head>
-  <body>
-    <main>
+  <body style="background-color: #0a0e17; color: #e8edf2; margin: 0; padding: 0; font-family: 'JetBrains Mono', monospace;">
+    <main style="max-width: 1200px; margin: 0 auto; padding: 2rem 1.5rem;">
       <slot />
     </main>
   </body>
