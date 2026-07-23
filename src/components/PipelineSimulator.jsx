@@ -11,7 +11,7 @@ export default function PipelineSimulator() {
 
   return (
     <div style={{
-      background: '#0a0e17',
+      background: 'transparent',
       display: 'flex',
       flexDirection: 'column',
       gap: '2.5rem',
@@ -56,7 +56,7 @@ export default function PipelineSimulator() {
 
 function ClockSlider({ speed, onSpeedChange }) {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#0e1524', padding: '1.5rem', borderRadius: '8px', border: '1px solid #1a2540' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: 'rgba(14, 21, 36, 0.65)', backdropFilter: 'blur(6px)', padding: '1.5rem', borderRadius: '8px', border: '1px solid rgba(0, 255, 200, 0.2)' }}>
       <style>{`
         input[type=range].custom-slider {
           -webkit-appearance: none;
@@ -135,8 +135,7 @@ function Oscilloscope({ speed }) {
       if (trailRef.current.length > TRAIL) trailRef.current.shift();
 
       ctx.clearRect(0, 0, SIZE, SIZE);
-      ctx.fillStyle = '#0e1524';
-      ctx.fillRect(0, 0, SIZE, SIZE);
+      // canvas background transparent to reveal parallax image
 
       for (let i = 0; i < 12; i++) {
         const angle = (i * Math.PI) / 6;
@@ -228,8 +227,7 @@ function SquareWave({ speed }) {
       offsetRef.current += speedRef.current * 75 * dt;
 
       ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#0e1524';
-      ctx.fillRect(0, 0, W, H);
+      // canvas background transparent to reveal parallax image
 
       ctx.strokeStyle = '#111a2e';
       ctx.lineWidth = 1;
@@ -301,7 +299,7 @@ function InstructionDisplay({ speed }) {
   }, [speed]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: '#0e1524', padding: '1.25rem', borderRadius: '8px', border: '1px solid #1a2540' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', background: 'rgba(14, 21, 36, 0.65)', backdropFilter: 'blur(6px)', padding: '1.25rem', borderRadius: '8px', border: '1px solid rgba(0, 255, 200, 0.2)' }}>
       <div style={{ color: '#8892b0', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Instruction Stream (IF Stage Focus)</div>
       <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
         {INSTRUCTIONS.map((instr, i) => {
@@ -357,7 +355,7 @@ function PipelineGantt({ speed }) {
   }
 
   return (
-    <div style={{ background: '#0e1524', padding: '1.25rem', borderRadius: '8px', border: '1px solid #1a2540', overflowX: 'auto' }}>
+    <div style={{ background: 'rgba(14, 21, 36, 0.65)', backdropFilter: 'blur(6px)', padding: '1.25rem', borderRadius: '8px', border: '1px solid rgba(0, 255, 200, 0.2)', overflowX: 'auto' }}>
       <div style={{ color: '#8892b0', fontSize: '0.85rem', textTransform: 'uppercase', marginBottom: '1rem', letterSpacing: '1px' }}>5-Stage Execution Gantt Chart</div>
       <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '4px', color: '#e8edf2', fontSize: '0.85rem' }}>
         <thead>

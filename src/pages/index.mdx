@@ -5,9 +5,12 @@ description: "Interactive 5-stage pipeline simulator with clock speed control"
 ---
 
 import PipelineSimulator from '../components/PipelineSimulator.jsx';
+import HeroCover from '../components/HeroCover.astro';
 
 <div style={{ marginBottom: '3rem' }}>
-  <PipelineSimulator client:load />
+  <HeroCover>
+    <PipelineSimulator client:load />
+  </HeroCover>
 </div>
 
 <hr style={{ border: '0', height: '1px', background: '#1a2540', margin: '3rem 0' }} />
